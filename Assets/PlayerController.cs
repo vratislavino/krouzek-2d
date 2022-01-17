@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -13,9 +14,12 @@ public class PlayerController : MonoBehaviour
     public List<Transform> GroundingPoints;
     public float maxSpeed = 6;
 
+    private PlayerStats playerStats;
+
     // Start is called before the first frame update
     void Start()
-    {   
+    {
+        playerStats = GetComponent<PlayerStats>();
         rigid = GetComponent<Rigidbody2D>();
     }
 
@@ -45,6 +49,9 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (playerStats.IsDead)
+            return;
+
         UpdateIsGrounded();
 
 
@@ -59,5 +66,17 @@ public class PlayerController : MonoBehaviour
         }
 
         ClampHorizontalVelocity();
+    }
+
+
+    private void OnCollisionEnter2D(Collision2D collision) {
+        Debug.Log("sasdsad");
+        if(collision.collider.CompareTag("Enemy")) {
+            playerStats.DealDamage(10);
+        }
+    }
+
+    public void RestartGame() {
+        SceneManager.LoadScene(0);
     }
 }

@@ -10,7 +10,6 @@ public class JumpingEnemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        while (true) { }
         rigid = GetComponent<Rigidbody2D>();
         StartCoroutine(Jump());
         //InvokeRepeating("Jump", 0, jumpCooldown);
