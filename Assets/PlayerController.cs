@@ -17,8 +17,7 @@ public class PlayerController : MonoBehaviour
     private PlayerStats playerStats;
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         playerStats = GetComponent<PlayerStats>();
         rigid = GetComponent<Rigidbody2D>();
     }
@@ -38,7 +37,7 @@ public class PlayerController : MonoBehaviour
 
     void ClampHorizontalVelocity() {
         var vel = rigid.velocity;
-        if(vel.x < -maxSpeed) {
+        if (vel.x < -maxSpeed) {
             vel.x = -maxSpeed;
         } else if (vel.x > maxSpeed) {
             vel.x = maxSpeed;
@@ -47,8 +46,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         if (playerStats.IsDead)
             return;
 
@@ -56,12 +54,20 @@ public class PlayerController : MonoBehaviour
 
 
         var input = Input.GetAxis("Horizontal");
+
         rigid.AddForce(Vector2.right * input * speed);
 
         if (isGrounded) {
-            var jump = Input.GetButtonDown("Jump");
-            if (jump) {
-                rigid.AddForce(Vector2.up * jumpForce);
+            if (Mathf.Abs(input) < 0.2f) {
+                playerStats.ChangeStamina(30 * Time.deltaTime);
+            }
+
+            if (playerStats.Stamina > 20) {
+                var jump = Input.GetButtonDown("Jump");
+                if (jump) {
+                    rigid.AddForce(Vector2.up * jumpForce);
+                    playerStats.ChangeStamina(-20);
+                }
             }
         }
 
@@ -71,7 +77,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision) {
         Debug.Log("sasdsad");
-        if(collision.collider.CompareTag("Enemy")) {
+        if (collision.collider.CompareTag("Enemy")) {
             playerStats.DealDamage(10);
         }
     }

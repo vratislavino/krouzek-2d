@@ -21,6 +21,9 @@ public class StatsVisuals : MonoBehaviour
             playerStats.HpChanged += () => {
                 healthImage.fillAmount = playerStats.Hp / (float)playerStats.MaxHp;
             };
+            playerStats.StaminaChanged += () => {
+                staminaImage.fillAmount = playerStats.Stamina / 100f;
+            };
             playerStats.PlayerDied += ShowDeathVisuals;
         }
     }
