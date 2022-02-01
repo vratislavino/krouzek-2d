@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerStats : MonoBehaviour
 {
     public event Action HpChanged;
+    public event Action XpChanged;
     public event Action StaminaChanged;
     public event Action PlayerDied;
 
@@ -18,13 +19,35 @@ public class PlayerStats : MonoBehaviour
     private float stamina;
     public float Stamina => stamina;
 
+    private int neededForNextLevel = 15;
+    public int NeededForNextLevel => neededForNextLevel;
+
+    private int xp;
+    public int Xp => xp;
+
+    private int level = 1;
+    public int Level => level;
+
     public bool IsDead => hp <= 0;
+
+    public int jumpHeightBonus;
 
     // Start is called before the first frame update
     void Start()
     {
         hp = 100;
         stamina = 100;
+    }
+
+    public void AddXp(int amount) {
+        xp += amount;
+        if(xp >= neededForNextLevel) {
+            xp -= neededForNextLevel;
+            neededForNextLevel = (int)(neededForNextLevel * 1.2f);
+            level++;
+        }
+
+        XpChanged?.Invoke();
     }
 
     public void Heal(int amount) {

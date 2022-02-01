@@ -10,6 +10,12 @@ public class StatsVisuals : MonoBehaviour
     [SerializeField]
     private Image staminaImage;
     [SerializeField]
+    private Image xpImage;
+    [SerializeField]
+    private Text levelText;
+
+
+    [SerializeField]
     GameObject gameOverScreen;
 
     PlayerStats playerStats;
@@ -18,16 +24,31 @@ public class StatsVisuals : MonoBehaviour
     {
         playerStats = GameObject.FindObjectOfType<PlayerStats>();    
         if(playerStats) {
-            playerStats.HpChanged += () => {
-                healthImage.fillAmount = playerStats.Hp / (float)playerStats.MaxHp;
-            };
-            playerStats.StaminaChanged += () => {
-                staminaImage.fillAmount = playerStats.Stamina / 100f;
-            };
+            playerStats.HpChanged += OnHpChanged;
+            playerStats.StaminaChanged += OnStaminaChanged;
+            playerStats.XpChanged += OnXpChanged;
             playerStats.PlayerDied += ShowDeathVisuals;
         }
     }
-    
+
+    private void OnHpChanged() {
+        healthImage.fillAmount = playerStats.Hp / (float)playerStats.MaxHp;
+    }
+    private void OnStaminaChanged() {
+        staminaImage.fillAmount = playerStats.Stamina / 100f;
+    }
+    private void OnXpChanged() {
+        xpImage.fillAmount = playerStats.Xp / (float)playerStats.NeededForNextLevel;
+        levelText.text = playerStats.Level.ToString();
+    }
+
+    private void OnDestroy() {
+        playerStats.HpChanged -= OnHpChanged;
+        playerStats.StaminaChanged -= OnStaminaChanged;
+        playerStats.XpChanged -= OnXpChanged;
+        playerStats.PlayerDied -= ShowDeathVisuals;
+    }
+
     private void ShowDeathVisuals() {
         gameOverScreen.SetActive(true);
     }

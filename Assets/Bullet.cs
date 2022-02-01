@@ -14,6 +14,7 @@ public class Bullet : MonoBehaviour
         var enemy = collision.collider.GetComponent<JumpingEnemy>();
         if(enemy) {
             Destroy(enemy.gameObject);
+            GameObject.FindObjectOfType<PlayerStats>().AddXp(20);
         }
         Destroy(gameObject);
     }
